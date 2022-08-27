@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 config/
-
+vue_run/node_modules/
 
