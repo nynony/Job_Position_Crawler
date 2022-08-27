@@ -20,7 +20,9 @@
     <h4>{{job_info[0].company}}</h4>
     <!-- 채용공고 출력 -->
     <p v-for="(job, j) in job_info" :key="j"> {{job.title}}
-    <button type="button" @click="test_func(job_info[0].company, j)">Save</button>
+    <button type="button" @click="save_func(job_info[0].company, j)">Save</button>
+    <button type="button" @click="hold_func(job_info[0].company, j)">Hold</button>
+    <button type="button" @click="close_func(job_info[0].company, j)">Close</button>
     </p>
     
   </div>
@@ -36,25 +38,36 @@ export default {
   name: 'App',
   data() {
     return {
-      menus : ['Home', 'Shop', 'About'],
+      menus : ['All', 'Wait', 'Save', 'Hold', 'Close'],
       job_group : jsonData,
       modal_status : false,
       test_title : '',
     }
   },
   methods : {
-    test_func(edit_company, edit_num) {
+    save_func(edit_company, edit_num) {
       this.edit_company = edit_company;
       this.edit_num = edit_num;
       console.log(this.edit_company);
       console.log(this.edit_num);
       console.log(this.job_group[this.edit_company][this.edit_num].title);
-      this.job_group[this.edit_company][this.edit_num].status = 'save';
-      console.log(this.job_group[this.edit_company][this.edit_num].status)
+    },
+    hold_func(edit_company, edit_num) {
+      this.edit_company = edit_company;
+      this.edit_num = edit_num;
+      console.log(this.edit_company);
+      console.log(this.edit_num);
+      console.log(this.job_group[this.edit_company][this.edit_num].title);
+    },
+    close_func(edit_company, edit_num) {
+      this.edit_company = edit_company;
+      this.edit_num = edit_num;
+      console.log(this.edit_company);
+      console.log(this.edit_num);
+      console.log(this.job_group[this.edit_company][this.edit_num].title);
     }
   },
   components: {
-
   }
 }
 
