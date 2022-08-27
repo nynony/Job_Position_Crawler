@@ -22,11 +22,30 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from starlette.responses import JSONResponse
-
+from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+from fastapi.middleware.cors import CORSMiddleware
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost.jeffrey.com",
+    "https://localhost.jeffrey.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 job_group = {}
 
 class Item(BaseModel):
@@ -37,7 +56,8 @@ class Item(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"Hello World"}
+
 
 
 # JSON 파일 저장
@@ -150,16 +170,17 @@ def crawling_info():
 
 # JOB_GROUP 정보 획득 (길이)
 @app.get("/return_info_len/")
-def return_info_len():
+async def return_info_len():
     global job_group
     
     if len(job_group) == 0:
         load_json()
 
     print(len(job_group))
-    return JSONResponse({
-        'length': str(len(job_group))
-    })
+    return str(len(job_group))
+    # return JSONResponse({
+    #     'length': str(len(job_group))
+    # })
 
 
 # JOB_GROUP 전체 정보 획득
@@ -173,7 +194,7 @@ def return_info():
 
 
 # 정보 업데이트 (SAVE, HOLD, CLOSE)
-# http://127.0.0.1:8000/update_item/?str_company='삼성전자'&job_list=10&status=3
+# http://127.0.0.1:8000/update_item/?str_company='삼성전자'&job_list=0&status=1
 @app.get("/update_item/")
 async def update_item(str_company: str='', job_list: int=0, status: int=0):
     global job_group
