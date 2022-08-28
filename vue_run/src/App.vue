@@ -4,13 +4,14 @@
       <!-- 화면 상단바 메뉴   -->
       <div class="menu">
         <!-- <a v-for="(menu_name, i) in menus" :key="i">{{ menu_name }}</a> -->
-        <v-btn v-for="(menu_name, i) in menus" :key="i" class="btn_st" color="white--text" rounded elevation="2" @click="fetchData()">{{ menu_name }}</v-btn>
+        <!-- <v-btn v-for="(menu_name, i) in menus" :key="i" class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(i+1)">{{ menu_name }}</v-btn> -->
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(1)">ALL</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(2)">WAIT</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(3)">SAVE</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(4)">HOLD</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(5)">CLOSE</v-btn>
       </div>
-      <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData()">LOAD</v-btn>
-      <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData_wait()">WAIT</v-btn>
-      <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData()">SAVE</v-btn>
-      <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData()">HOLD</v-btn>
-      <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData()">CLOSE</v-btn>
+
       
       <!-- 리스트 출력 -->
       <div v-for="(job_info, i) in job_group" :key="i">
@@ -63,19 +64,10 @@ export default {
             // 항상 실행
             });
     },
-    fetchData: function() {
-              axios.get('http://127.0.0.1:8000/return_info/').then((response) => {
-                console.log(response.data);
-                this.job_group = Object(response.data);
-              })
-              .catch(function(error) {
-                console.log(error);
-              });
-    },
-    fetchData_wait: function() {
+    fetchData: function(status_num) {
               axios.get('http://127.0.0.1:8000/return_info/', {
                 params: {
-                  status: Number(4)
+                  status: Number(status_num)
                 }
               }).then((response) => {
                 console.log(response.data);
@@ -98,7 +90,6 @@ export default {
               
     },
     },
-    
 
   components: {
 

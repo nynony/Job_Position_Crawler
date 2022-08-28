@@ -201,12 +201,49 @@ async def return_info_len():
 @app.get("/return_info/")
 def return_info(status: int=0):
     print("--------------------------------")
+    print(status)
+
     global job_group
     if len(job_group) == 0:
         load_json()
 
-    print(status)
-    return JSONResponse(job_group)
+    copy_group = {}
+
+    # ALL   : 1
+    # WAIT  : 2
+    # SAVE  : 3
+    # HOLD  : 4
+    # CLOSE : 5
+
+    if status == 1:     str_status = 'all'
+    elif status == 2:   str_status = 'wait'
+    elif status == 3:   str_status = 'save'
+    elif status == 4:   str_status = 'hold'
+    elif status == 5:   str_status = 'close'
+            
+    if str_status == 'all':    # ALL
+        print("return all")
+        return JSONResponse(job_group)
+        
+    def filter_status_func():
+        try:
+            copy_group[companys].append(job_group[companys][idx])
+        except:
+            copy_group[companys] = []
+            copy_group[companys].append(job_group[companys][idx])
+    
+    for companys in job_group:
+        for idx, _ in enumerate(job_group[companys]):
+            if job_group[companys][idx]['status'] == str_status:    # WAIT
+                filter_status_func()
+            elif job_group[companys][idx]['status'] == str_status:    # SAVE
+                filter_status_func()
+            elif job_group[companys][idx]['status'] == str_status:    # HOLD
+                filter_status_func()
+            elif job_group[companys][idx]['status'] == str_status:    # CLOSE
+                filter_status_func()
+    return JSONResponse(copy_group)
+
 
 
 
@@ -221,11 +258,11 @@ async def update_item(str_company: str='', job_list: int=0, status: int=0):
     
     if status == 0:
         return 0
-    elif status == 1:       # SAVE
+    elif status == 3:       # SAVE
         job_group[str_company][job_list]['status'] = 'save'
-    elif status == 2:       # HOLD
+    elif status == 4:       # HOLD
         job_group[str_company][job_list]['status'] = 'hold'
-    elif status == 3:       # CLOSE
+    elif status == 5:       # CLOSE
         job_group[str_company][job_list]['status'] = 'close'
     else:
         return 0    
