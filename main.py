@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import requests
 import time
 import json
@@ -26,6 +27,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
+from typing import List, Optional
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -49,9 +51,11 @@ app.add_middleware(
 job_group = {}
 
 class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None] = None
+    result_list : List[str] = []
+    # name: str
+    # job_list: float
+    # status: None
+    
 
 
 @app.get("/")
@@ -61,12 +65,15 @@ def read_root():
 
 
 # JSON 파일 저장
+@app.get("/save_json/")
 def save_json():
     global job_group
     tf = open(file_path, 'w')
     json.dump(job_group, tf)
     tf.close()
     job_group = {}
+    return "Done"
+    
     
 # JSON 파일 불러오기
 @app.get("/load_json/")
@@ -144,6 +151,7 @@ def crawling_info():
                                 break
                         else:
                             job_group[str_company].append({'company': str_company, \
+                                                        'title_idx' : len(job_group[str_company]), \
                                                         'title': str_title, \
                                                         'title_link': str_title_link, \
                                                         'company_link': str_company_link, \
@@ -154,6 +162,7 @@ def crawling_info():
                     else:    # 회사명 - 신규진입
                         job_group[str_company] = []
                         job_group[str_company].append({'company': str_company, \
+                                                    'title_idx' : len(job_group[str_company]), \
                                                     'title': str_title, \
                                                     'title_link': str_title_link, \
                                                     'company_link': str_company_link, \
@@ -184,23 +193,32 @@ async def return_info_len():
 
 
 # JOB_GROUP 전체 정보 획득
+# ALL   : 1
+# WAIT  : 2
+# SAVE  : 3
+# HOLD  : 4
+# CLOSE : 5
 @app.get("/return_info/")
-def return_info():
+def return_info(status: int=0):
+    print("--------------------------------")
     global job_group
     if len(job_group) == 0:
         load_json()
 
+    print(status)
     return JSONResponse(job_group)
 
 
+
 # 정보 업데이트 (SAVE, HOLD, CLOSE)
-# http://127.0.0.1:8000/update_item/?str_company='삼성전자'&job_list=0&status=1
 @app.get("/update_item/")
 async def update_item(str_company: str='', job_list: int=0, status: int=0):
+    print("--------------------------------")
+    print(str_company, job_list, status)
     global job_group
     if len(job_group) == 0:
         load_json()
-
+    
     if status == 0:
         return 0
     elif status == 1:       # SAVE
@@ -213,6 +231,3 @@ async def update_item(str_company: str='', job_list: int=0, status: int=0):
         return 0    
     save_json()
     return 1
-    #return {"item_name": item.name, "item_id": item_id}
-
-
