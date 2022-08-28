@@ -1,14 +1,8 @@
 from asyncio.windows_events import NULL
 import requests
-import time
 import json
-import threading
-import queue
-import random
 import datetime
-import os
 import urllib3
-import pickle
 
 from urllib.error import URLError, HTTPError
 from bs4 import BeautifulSoup
@@ -24,8 +18,6 @@ from pydantic import BaseModel
 
 from starlette.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
-from starlette.requests import Request
-from starlette.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 
@@ -48,6 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 job_group = {}
 
 class Item(BaseModel):
@@ -57,11 +50,9 @@ class Item(BaseModel):
     # status: None
     
 
-
 @app.get("/")
 def read_root():
     return {"Hello World"}
-
 
 
 # JSON 파일 저장
@@ -81,8 +72,8 @@ def load_json():
     global job_group
     with open(file_path, 'r') as file:
         job_group = json.load(file)
-   
-    
+
+
 # 구직사이트 크롤링 시작
 @app.get("/get_info/")
 def crawling_info():
@@ -198,23 +189,49 @@ async def return_info_len():
 # SAVE  : 3
 # HOLD  : 4
 # CLOSE : 5
+
+@app.get("/return_info_num/")
+def return_info_num():
+    global job_group
+    if len(job_group) == 0:
+        load_json()
+
+    num_all = 0
+    num_wait = 0
+    num_save = 0
+    num_hold = 0
+    num_close = 0
+
+    for companys in job_group:
+        for idx, _ in enumerate(job_group[companys]):
+            if job_group[companys][idx]['status'] == "wait":
+                num_wait += 1
+            elif job_group[companys][idx]['status'] == "save":
+                num_save += 1
+            elif job_group[companys][idx]['status'] == "hold":
+                num_hold += 1
+            elif job_group[companys][idx]['status'] == "close":
+                num_close += 1
+            num_all = num_wait + num_save + num_hold + num_close
+
+    copy_group = {}
+    copy_group['all'] = num_all
+    copy_group['wait'] = num_wait
+    copy_group['save'] = num_save
+    copy_group['hold'] = num_hold
+    copy_group['close'] = num_close
+    
+    return JSONResponse(copy_group)
+
+
 @app.get("/return_info/")
 def return_info(status: int=0):
-    print("--------------------------------")
-    print(status)
-
     global job_group
     if len(job_group) == 0:
         load_json()
 
     copy_group = {}
-
-    # ALL   : 1
-    # WAIT  : 2
-    # SAVE  : 3
-    # HOLD  : 4
-    # CLOSE : 5
-
+    
     if status == 1:     str_status = 'all'
     elif status == 2:   str_status = 'wait'
     elif status == 3:   str_status = 'save'
@@ -242,16 +259,13 @@ def return_info(status: int=0):
                 filter_status_func()
             elif job_group[companys][idx]['status'] == str_status:    # CLOSE
                 filter_status_func()
+
     return JSONResponse(copy_group)
-
-
 
 
 # 정보 업데이트 (SAVE, HOLD, CLOSE)
 @app.get("/update_item/")
 async def update_item(str_company: str='', job_list: int=0, status: int=0):
-    print("----------------- UPDATE -----------------")
-    print(str_company, job_list, status)
     global job_group
     if len(job_group) == 0:
         load_json()

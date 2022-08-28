@@ -10,18 +10,30 @@
         <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(3)">SAVE</v-btn>
         <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(4)">HOLD</v-btn>
         <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(5)">CLOSE</v-btn>
+        <p></p>
+        <v-p class="num_status">{{num_status_all}}</v-p>
+        <v-p class="num_status">{{num_status_wait}}</v-p>
+        <v-p class="num_status">{{num_status_save}}</v-p>
+        <v-p class="num_status">{{num_status_hold}}</v-p>
+        <v-p class="num_status">{{num_status_close}}</v-p>
       </div>
-
-      
+           
       <!-- 리스트 출력 -->
       <div v-for="(job_info, i) in job_group" :key="i">
+
         <!-- 회사명 출력 -->
-        <h3 class="text-sm-left">{{job_info[0].company}}</h3>
+        <a v-bind:href=job_info[0].company_link target="_blank" style="text-decoration:none;color:black;">
+          <h3 class="text-sm-left">{{job_info[0].company}}</h3>
+        </a>
+        
         <!-- 채용공고 출력 -->
-        <p class="job_str" align="left" v-for="(job, j) in job_info" :key="j"> {{job.title}}
-        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="update_func(job_info[j].company, job_info[0].title_idx, 3)">Save</v-btn>
-        <v-btn color=white rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 4)">Hold</v-btn>
-        <v-btn color=white rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 5)">Close</v-btn>
+        <p class="job_str" align="left" v-for="(job, j) in job_info" :key="j">
+          <a v-bind:href=job_info[j].title_link target="_blank" style="text-decoration:none;color:black;">
+             {{job.title}}
+          </a>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[0].title_idx, 3)">Save</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 4)">Hold</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 5)">Close</v-btn>
         </p>
       </div>
     </v-main>
@@ -31,16 +43,19 @@
 
 <script>
 import axios from 'axios'
-
 export default {
   name: 'App',
   data() {
     return {
       menus : ['All', 'Wait', 'Save', 'Hold', 'Close'],
+      num_status_all : 0,
+      num_status_wait : 0,
+      num_status_save : 0,
+      num_status_hold : 0,
+      num_status_close : 0,
       job_group : 0,
       modal_status : false,
       test_title : '',
-
     }
   },
   methods : {
@@ -76,6 +91,22 @@ export default {
               .catch(function(error) {
                 console.log(error);
               });
+
+              axios.get('http://127.0.0.1:8000/return_info_num/', {
+                params: {
+                
+                }
+              }).then((response) => {
+                console.log(response.data);
+                this.num_status_all = response.data.all
+                this.num_status_wait = response.data.wait
+                this.num_status_save = response.data.save
+                this.num_status_hold = response.data.hold
+                this.num_status_close = response.data.close
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
     },
     sendData: function() {
       axios.get("http://127.0.0.1:8000/update_item/?str_company='삼성전자'&job_list=0&status=1")
@@ -87,19 +118,12 @@ export default {
               }).then(function() {
                   // 항상 실행
               });
-              
     },
   },
-
   components: {
-
   }
 }
-
-
 </script>
-
-
 
 <style>
 body {
@@ -118,9 +142,6 @@ div {
   border-radius: 8px;
   padding: 20px;
 }
-
-
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -129,30 +150,34 @@ div {
   color: #2c3e50;
   margin-top: 0px;
 }
-
 .menu {
   background: darkslateblue;
   padding: 15px;
   border-radius: 5px;
 }
-
 .menu a{
   color: white;
   padding: 20px;
 }
-
 .text-sm-left {
   margin-top: 30px;
   margin-left: 20px;
   padding: 10px;
-  
 }
 .job_str {
   padding: 10px;
   margin-left: 80px;
 }
-
 .btn_st {
-  margin-left: 20px;
+  margin: 10px;
+  width: 100px;
+}
+.btn_st_title {
+  margin: 5px;
+}
+.num_status {
+  margin-top: 10px;
+  color: white;
+  margin: 55px;
 }
 </style>
