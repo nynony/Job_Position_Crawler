@@ -250,7 +250,7 @@ def return_info(status: int=0):
 # 정보 업데이트 (SAVE, HOLD, CLOSE)
 @app.get("/update_item/")
 async def update_item(str_company: str='', job_list: int=0, status: int=0):
-    print("--------------------------------")
+    print("----------------- UPDATE -----------------")
     print(str_company, job_list, status)
     global job_group
     if len(job_group) == 0:

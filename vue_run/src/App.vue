@@ -19,9 +19,9 @@
         <h3 class="text-sm-left">{{job_info[0].company}}</h3>
         <!-- 채용공고 출력 -->
         <p class="job_str" align="left" v-for="(job, j) in job_info" :key="j"> {{job.title}}
-        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="update_func(job_info[0].company, j, 1)">Save</v-btn>
-        <v-btn color=white rounded elevation="2" @click="update_func(job_info[0].company, j, 2)">Hold</v-btn>
-        <v-btn color=white rounded elevation="2" @click="update_func(job_info[0].company, j, 3)">Close</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="update_func(job_info[j].company, job_info[0].title_idx, 3)">Save</v-btn>
+        <v-btn color=white rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 4)">Hold</v-btn>
+        <v-btn color=white rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 5)">Close</v-btn>
         </p>
       </div>
     </v-main>
@@ -89,7 +89,7 @@ export default {
               });
               
     },
-    },
+  },
 
   components: {
 
