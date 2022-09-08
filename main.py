@@ -74,7 +74,6 @@ def load_json():
         job_group = json.load(file)
 
 
-
 # JOB_GROUP 정보 획득 (길이)
 @app.get("/return_info_len/")
 async def return_info_len():
@@ -133,6 +132,7 @@ def return_info_num():
 
 @app.get("/return_info/")
 def return_info(status: int=0):
+    print("---------- return info ----------")
     global job_group
     if len(job_group) == 0:
         load_json()
@@ -145,8 +145,16 @@ def return_info(status: int=0):
     elif status == 4:   str_status = 'hold'
     elif status == 5:   str_status = 'close'
             
-    if str_status == 'all':    # ALL
+    # 상단 ALL 버튼 클릭
+    if str_status == 'all':
         print("return all")
+        # send_job_group = {}
+        # if len(job_group) > 100:
+        #     for idx, corp_name in enumerate(job_group):
+        #         send_job_group[corp_name] = job_group[corp_name]
+        #         if idx == 10:
+        #             break
+        # return JSONResponse(send_job_group)
         return JSONResponse(job_group)
         
     def filter_status_func():
@@ -172,7 +180,12 @@ def return_info(status: int=0):
 
 # 정보 업데이트 (SAVE, HOLD, CLOSE)
 @app.get("/update_item/")
-async def update_item(str_company: str='', job_list: int=0, status: int=0):
+def update_item(str_company: str='', job_list: int=0, status: int=0):
+    print("---------- update item ----------")
+    print(str_company)
+    print(job_list)
+    print(status)
+    
     global job_group
     if len(job_group) == 0:
         load_json()

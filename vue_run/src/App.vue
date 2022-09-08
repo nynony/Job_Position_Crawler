@@ -31,9 +31,10 @@
           <a v-bind:href=job_info[j].title_link target="_blank" style="text-decoration:none;color:black;">
              {{job.title}}
           </a>
-        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[0].title_idx, 3)">Save</v-btn>
-        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 4)">Hold</v-btn>
-        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[0].company, job_info[j].title_idx, 5)">Close</v-btn>
+        <!-- 리스트 내 버튼 클릭 -->
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 3)">Save</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 4)">Hold</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 5)">Close</v-btn>
         </p>
       </div>
     </v-main>
