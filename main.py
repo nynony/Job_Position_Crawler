@@ -137,7 +137,7 @@ def return_info(status: int=0):
     if len(job_group) == 0:
         load_json()
 
-    copy_group = {}
+    status_filter_group = {}
     
     if status == 1:     str_status = 'all'
     elif status == 2:   str_status = 'wait'
@@ -147,22 +147,14 @@ def return_info(status: int=0):
             
     # 상단 ALL 버튼 클릭
     if str_status == 'all':
-        print("return all")
-        # send_job_group = {}
-        # if len(job_group) > 100:
-        #     for idx, corp_name in enumerate(job_group):
-        #         send_job_group[corp_name] = job_group[corp_name]
-        #         if idx == 10:
-        #             break
-        # return JSONResponse(send_job_group)
         return JSONResponse(job_group)
         
     def filter_status_func():
         try:
-            copy_group[companys].append(job_group[companys][idx])
+            status_filter_group[companys].append(job_group[companys][idx])
         except:
-            copy_group[companys] = []
-            copy_group[companys].append(job_group[companys][idx])
+            status_filter_group[companys] = []
+            status_filter_group[companys].append(job_group[companys][idx])
     
     for companys in job_group:
         for idx, _ in enumerate(job_group[companys]):
@@ -175,7 +167,15 @@ def return_info(status: int=0):
             elif job_group[companys][idx]['status'] == str_status:    # CLOSE
                 filter_status_func()
 
-    return JSONResponse(copy_group)
+    send_job_group = {}
+    view_num = 10
+    if len(status_filter_group) > view_num:
+        for idx, corp_name in enumerate(status_filter_group):
+            send_job_group[corp_name] = status_filter_group[corp_name]
+            if idx == view_num:
+                break
+    return JSONResponse(send_job_group)
+
 
 
 # 정보 업데이트 (SAVE, HOLD, CLOSE)
