@@ -132,13 +132,13 @@ def return_info_num():
 
 @app.get("/return_info/")
 def return_info(status: int=0):
-    print("---------- return info ----------")
+    print("---------- Return Info ----------")
     global job_group
     if len(job_group) == 0:
         load_json()
 
     status_filter_group = {}
-    
+
     if status == 1:     str_status = 'all'
     elif status == 2:   str_status = 'wait'
     elif status == 3:   str_status = 'save'
@@ -174,17 +174,17 @@ def return_info(status: int=0):
             send_job_group[corp_name] = status_filter_group[corp_name]
             if idx == view_num:
                 break
-    return JSONResponse(send_job_group)
+        return JSONResponse(send_job_group)
+    else:
+        return JSONResponse(status_filter_group)
+    
 
 
 
 # 정보 업데이트 (SAVE, HOLD, CLOSE)
 @app.get("/update_item/")
 def update_item(str_company: str='', job_list: int=0, status: int=0):
-    print("---------- update item ----------")
-    print(str_company)
-    print(job_list)
-    print(status)
+    print("---------- Update Item ----------")
     
     global job_group
     if len(job_group) == 0:
@@ -200,5 +200,21 @@ def update_item(str_company: str='', job_list: int=0, status: int=0):
         job_group[str_company][job_list]['status'] = 'close'
     else:
         return 0    
+    save_json()
+    return 1
+
+
+# 정보 업데이트 (SAVE, HOLD, CLOSE)
+@app.get("/update_all_item/")
+def update_item(str_company: str=''):
+    print("---------- Update All Item ----------")
+    
+    global job_group
+    if len(job_group) == 0:
+        load_json()
+    
+    for idx, _ in enumerate(job_group[str_company]):
+        job_group[str_company][idx]['status'] = 'close'
+
     save_json()
     return 1
