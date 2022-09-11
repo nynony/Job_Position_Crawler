@@ -17,10 +17,9 @@
         <v-p class="num_status">{{num_status_hold}}</v-p>
         <v-p class="num_status">{{num_status_close}}</v-p>
       </div>
-           
+      
       <!-- 리스트 출력 -->
       <div v-for="(job_info, i) in job_group" :key="i">
-
 
         <!-- 회사명 출력 -->
         <p class="company_str" align="left">
@@ -41,14 +40,17 @@
        
         <!-- 채용공고 출력 -->
         <p class="job_str" align="left" v-for="(job, j) in job_info" :key="j">
-          <a v-bind:href=job_info[j].title_link target="_blank" class="job_str2" style="text-decoration:none;color:black;">
+          <a v-bind:href=job_info[j].title_link target="_blank" class="job_str2" style="text-decoration:none">
              {{job.title}}
           </a>
 
         <!-- 리스트 내 버튼 클릭 -->
-        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 3)">Save</v-btn>
+
+        <v-btn :class="[btn_active === 'white' ? 'btn_st_title': 'btn_st_title_active']" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 3)">Save</v-btn>
         <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 4)">Hold</v-btn>
         <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 5)">Close</v-btn>
+
+
         </p>
       </div>
     </v-main>
@@ -62,23 +64,34 @@ export default {
   name: 'App',
   data() {
     return {
-      menus : ['All', 'Wait', 'Save', 'Hold', 'Close'],
       num_status_all : 0,
       num_status_wait : 0,
       num_status_save : 0,
       num_status_hold : 0,
       num_status_close : 0,
       job_group : 0,
-      modal_status : false,
-      test_title : '',
+      btn_active : "white",
+      view_items : [],
+      view_items_num : 0,
+
     }
   },
   methods : {
     update_func(edit_company, edit_num, status_num) {
+      console.log("--------------------------------")
       this.edit_company = edit_company;
       this.edit_num = edit_num;
       this.edit_status = status_num;
       
+
+      if (this.btn_active == "white") {
+        this.btn_active = 'red'
+      } else {
+        this.btn_active = 'white'
+      }
+      
+
+
       axios.get("http://127.0.0.1:8000/update_item/", {
         params: {
           str_company: String(this.edit_company),
@@ -118,6 +131,22 @@ export default {
               }).then((response) => {
                 console.log(response.data);
                 this.job_group = Object(response.data);
+                console.log("---------------------retur_info");
+ 
+                // 전체 출력 회사 갯수
+                // console.log(Object.keys(this.job_group).length);
+                
+                // 전체 출력 아이템 갯수
+                for (var key in this.job_group) {
+                  this.view_items_num += this.job_group[key].length;
+                }
+
+                // 버튼 초기화
+                for (var i=0; i < this.view_items_num; i++) {
+                  this.view_items.push('deactive');
+                }
+                console.log(this.view_items)
+
               })
               .catch(function(error) {
                 console.log(error);
@@ -128,7 +157,6 @@ export default {
                 
                 }
               }).then((response) => {
-                console.log(response.data);
                 this.num_status_all = response.data.all
                 this.num_status_wait = response.data.wait
                 this.num_status_save = response.data.save
@@ -137,17 +165,6 @@ export default {
               })
               .catch(function(error) {
                 console.log(error);
-              });
-    },
-    sendData: function() {
-      axios.get("http://127.0.0.1:8000/update_item/?str_company='삼성전자'&job_list=0&status=1")
-                
-              .then(function (response) {
-                  console.log(response)
-              }).catch(function (error) {
-                  console.log(error)
-              }).then(function() {
-                  // 항상 실행
               });
     },
   },
@@ -213,6 +230,11 @@ div {
 }
 .btn_st_title {
   margin: 5px;
+  background-color: white;
+}
+.btn_st_title_active {
+  margin: 5px;
+  background-color: red;
 }
 .num_status {
   margin-top: 10px;
@@ -221,5 +243,7 @@ div {
 }
 .job_str2 {
   margin-right: 20px;
+  color: black;
 }
+
 </style>
