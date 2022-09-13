@@ -1,25 +1,17 @@
 from asyncio.windows_events import NULL
-import requests
 import json
-import datetime
 import urllib3
-
-from urllib.error import URLError, HTTPError
-from bs4 import BeautifulSoup
-from collections import defaultdict
-from pprint import pprint
 
 from config.assistant import *
 from config.site_config import *
 
-from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 from starlette.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Optional
+from typing import List
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -98,9 +90,7 @@ async def return_info_len():
 
 @app.get("/return_info_num/")
 def return_info_num():
-    global job_group
-    if len(job_group) == 0:
-        load_json()
+    load_json()
 
     num_all = 0
     num_wait = 0
@@ -133,9 +123,7 @@ def return_info_num():
 @app.get("/return_info/")
 def return_info(status: int=0):
     print("---------- Return Info ----------")
-    global job_group
-    if len(job_group) == 0:
-        load_json()
+    load_json()
 
     status_filter_group = {}
 
@@ -204,7 +192,7 @@ def update_item(str_company: str='', job_list: int=0, status: int=0):
     return 1
 
 
-# 정보 업데이트 (SAVE, HOLD, CLOSE)
+# 정보 업데이트 (ALL CLOSE)
 @app.get("/update_all_item/")
 def update_item(str_company: str=''):
     print("---------- Update All Item ----------")

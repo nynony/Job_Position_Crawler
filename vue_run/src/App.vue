@@ -20,7 +20,7 @@
       
       <!-- 리스트 출력 -->
       <div v-for="(job_info, i) in job_group" :key="i">
-
+      
         <!-- 회사명 출력 -->
         <p class="company_str" align="left">
           <a v-bind:href=job_info[0].company_link target="_blank" style="text-decoration:none;color:black;">
@@ -46,7 +46,7 @@
 
         <!-- 리스트 내 버튼 클릭 -->
 
-        <v-btn :class="[btn_active === 'white' ? 'btn_st_title': 'btn_st_title_active']" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 3)">Save</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 3)">Save</v-btn>
         <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 4)">Hold</v-btn>
         <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 5)">Close</v-btn>
 
@@ -73,24 +73,19 @@ export default {
       btn_active : "white",
       view_items : [],
       view_items_num : 0,
-
     }
   },
   methods : {
     update_func(edit_company, edit_num, status_num) {
-      console.log("--------------------------------")
       this.edit_company = edit_company;
       this.edit_num = edit_num;
       this.edit_status = status_num;
-      
 
       if (this.btn_active == "white") {
         this.btn_active = 'red'
       } else {
         this.btn_active = 'white'
       }
-      
-
 
       axios.get("http://127.0.0.1:8000/update_item/", {
         params: {
@@ -129,9 +124,8 @@ export default {
                   status: Number(status_num)
                 }
               }).then((response) => {
-                console.log(response.data);
+                console.log("----- Return Info (상단 메뉴 버튼) -----");
                 this.job_group = Object(response.data);
-                console.log("---------------------retur_info");
  
                 // 전체 출력 회사 갯수
                 // console.log(Object.keys(this.job_group).length);
@@ -140,13 +134,13 @@ export default {
                 for (var key in this.job_group) {
                   this.view_items_num += this.job_group[key].length;
                 }
+                // console.log(this.view_items_num)
 
-                // 버튼 초기화
-                for (var i=0; i < this.view_items_num; i++) {
-                  this.view_items.push('deactive');
-                }
-                console.log(this.view_items)
-
+                // 리스트 버튼 초기화
+                // for (var i=0; i < this.view_items_num; i++) {
+                //   this.view_items.push('deactive');
+                // }
+                // console.log(this.view_items);
               })
               .catch(function(error) {
                 console.log(error);
@@ -167,6 +161,9 @@ export default {
                 console.log(error);
               });
     },
+  },
+  beforeMount() {
+    this.fetchData(2);
   },
   components: {
   }
