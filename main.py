@@ -157,7 +157,7 @@ def return_info(status: int=0):
 
     send_job_group = {}
     view_num = 10
-    if len(status_filter_group) > view_num:
+    if status == 2 and len(status_filter_group) > view_num:
         for idx, corp_name in enumerate(status_filter_group):
             send_job_group[corp_name] = status_filter_group[corp_name]
             if idx == view_num:
