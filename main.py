@@ -202,7 +202,8 @@ def update_item(str_company: str=''):
         load_json()
     
     for idx, _ in enumerate(job_group[str_company]):
-        job_group[str_company][idx]['status'] = 'close'
+        if job_group[str_company][idx]['status'] == 'wait':
+            job_group[str_company][idx]['status'] = 'close'
 
     save_json()
     return 1
