@@ -206,3 +206,17 @@ def update_item(str_company: str=''):
 
     save_json()
     return 1
+
+
+# 회사 이름 Block
+@app.get("/company_block/")
+def company_block(str_company: str=''):
+    print("---------- Company Block ----------")
+
+    update_item(str_company)
+
+    filter_list_company_name_path = "config/filter_list_company_name.txt"
+    with open(filter_list_company_name_path, 'a', encoding="EUC-KR") as f:
+        f.write(str_company+'\n')
+    
+    return 1

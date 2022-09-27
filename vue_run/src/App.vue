@@ -33,8 +33,17 @@
               color="primary"
               class="btn_st_company_title"
               rounded elevation="2"
-              @click="update_all_func(job_info[0].company, 5)">
+              @click="update_all_func(job_info[0].company)">
               All Close
+            </v-btn>
+            <v-btn
+              depressed 
+              tile
+              color="primary"
+              class="btn_st_company_title"
+              rounded elevation="2"
+              @click="block_company(job_info[0].company)">
+              Block
             </v-btn>
         </p>
        
@@ -106,6 +115,22 @@ export default {
       this.edit_company = edit_company;
       
       axios.get("http://127.0.0.1:8000/update_all_item/", {
+        params: {
+          str_company: String(this.edit_company),
+        }
+      })
+      .then(function (response) {
+        console.log(response)
+        }).catch(function (error) {
+          console.log(error)
+          }).then(function() {
+            // 항상 실행
+            });
+    },
+    block_company(edit_company) {
+      this.edit_company = edit_company;
+      
+      axios.get("http://127.0.0.1:8000/company_block/", {
         params: {
           str_company: String(this.edit_company),
         }
