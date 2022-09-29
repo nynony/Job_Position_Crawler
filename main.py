@@ -97,6 +97,7 @@ def return_info_num():
     num_save = 0
     num_hold = 0
     num_close = 0
+    company_count = 0
 
     for companys in job_group:
         for idx, _ in enumerate(job_group[companys]):
@@ -156,12 +157,17 @@ def return_info(status: int=0):
                 filter_status_func()
 
     send_job_group = {}
-    view_num = 10
+    view_num = 15
     if status == 2 and len(status_filter_group) > view_num:
         for idx, corp_name in enumerate(status_filter_group):
             send_job_group[corp_name] = status_filter_group[corp_name]
+            print("==============================")
+            send_job_group[corp_name][0]['company_count'] = len(job_group[corp_name])
+            print(send_job_group[corp_name])
+            print("==============================")
             if idx == view_num:
                 break
+
         return JSONResponse(send_job_group)
     else:
         return JSONResponse(status_filter_group)
