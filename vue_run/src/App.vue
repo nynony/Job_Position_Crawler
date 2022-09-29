@@ -24,7 +24,7 @@
         <!-- 회사명 출력 -->
         <p class="company_str" align="left">
           <a v-bind:href=job_info[0].company_link target="_blank" style="text-decoration:none;color:black;">
-            <h2 class="text-sm-left">{{job_info[0].company}}</h2>
+            <h2 class="text-sm-left">{{job_info[0].company}}  ({{job_info[0].company_count}})</h2>
           </a>
             <!-- <v-btn class="btn_st_title" rounded elevation="2" @click="update_all_func(job_info[0].company, 5)">All Close</v-btn> -->
             <v-btn
@@ -82,6 +82,7 @@ export default {
       btn_active : "white",
       view_items : [],
       view_items_num : 0,
+      company_count : 0,
     }
   },
   methods : {
@@ -151,21 +152,15 @@ export default {
               }).then((response) => {
                 console.log("----- Return Info (상단 메뉴 버튼) -----");
                 this.job_group = Object(response.data);
- 
-                // 전체 출력 회사 갯수
+                
+                // 화면 내 전체 출력 회사 갯수
                 // console.log(Object.keys(this.job_group).length);
                 
-                // 전체 출력 아이템 갯수
-                for (var key in this.job_group) {
-                  this.view_items_num += this.job_group[key].length;
-                }
-                // console.log(this.view_items_num)
-
-                // 리스트 버튼 초기화
-                // for (var i=0; i < this.view_items_num; i++) {
-                //   this.view_items.push('deactive');
+                // 화면 내 전체 출력 아이템 갯수
+                // for (var key in this.job_group) {
+                //   this.view_items_num += this.job_group[key].length;
                 // }
-                // console.log(this.view_items);
+                // console.log(this.view_items_num)
               })
               .catch(function(error) {
                 console.log(error);
