@@ -144,7 +144,7 @@ def return_info(status: int=0):
         except:
             status_filter_group[companys] = []
             status_filter_group[companys].append(job_group[companys][idx])
-    
+
     for companys in job_group:
         for idx, _ in enumerate(job_group[companys]):
             if job_group[companys][idx]['status'] == str_status:    # WAIT
@@ -156,20 +156,23 @@ def return_info(status: int=0):
             elif job_group[companys][idx]['status'] == str_status:    # CLOSE
                 filter_status_func()
 
+    # 포지션 누적 개수 추가
+    for idx, corp_name in enumerate(status_filter_group):
+        status_filter_group[corp_name][0]['company_count'] = len(job_group[corp_name])
+
+
     send_job_group = {}
     view_num = 15
     if status == 2 and len(status_filter_group) > view_num:
         for idx, corp_name in enumerate(status_filter_group):
             send_job_group[corp_name] = status_filter_group[corp_name]
-            print("==============================")
-            send_job_group[corp_name][0]['company_count'] = len(job_group[corp_name])
-            print(send_job_group[corp_name])
-            print("==============================")
+
             if idx == view_num:
                 break
 
         return JSONResponse(send_job_group)
     else:
+        
         return JSONResponse(status_filter_group)
     
 
