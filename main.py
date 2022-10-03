@@ -203,15 +203,25 @@ def update_item(str_company: str='', job_list: int=0, status: int=0):
 
 # 정보 업데이트 (ALL CLOSE)
 @app.get("/update_all_item/")
-def update_item(str_company: str=''):
+def update_item(str_company: str='', view_status: int=0):
     print("---------- Update All Item ----------")
+    print(str_company)
+    print(view_status)
+
     
     global job_group
     if len(job_group) == 0:
         load_json()
     
+    if view_status == 2:
+        str_view_status = 'wait'
+    elif view_status == 3:
+        str_view_status = 'save'
+    elif view_status == 4:
+        str_view_status = 'hold'
+    
     for idx, _ in enumerate(job_group[str_company]):
-        if job_group[str_company][idx]['status'] == 'wait':
+        if job_group[str_company][idx]['status'] == str_view_status:
             job_group[str_company][idx]['status'] = 'close'
 
     save_json()

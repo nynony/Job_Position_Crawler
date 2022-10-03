@@ -26,14 +26,13 @@
           <a v-bind:href=job_info[0].company_link target="_blank" style="text-decoration:none;color:black;">
             <h2 class="text-sm-left">{{job_info[0].company}}  ({{job_info[0].company_count}})</h2>
           </a>
-            <!-- <v-btn class="btn_st_title" rounded elevation="2" @click="update_all_func(job_info[0].company, 5)">All Close</v-btn> -->
             <v-btn
               depressed 
               tile
               color="primary"
               class="btn_st_company_title"
               rounded elevation="2"
-              @click="update_all_func(job_info[0].company)">
+              @click="update_all_func(job_info[0].company, now_view_status)">
               All Close
             </v-btn>
             <v-btn
@@ -83,6 +82,7 @@ export default {
       view_items : [],
       view_items_num : 0,
       company_count : 0,
+      now_view_status : 0,
     }
   },
   methods : {
@@ -112,12 +112,14 @@ export default {
             // 항상 실행
             });
     },
-    update_all_func(edit_company) {
+    update_all_func(edit_company, status_view) {
       this.edit_company = edit_company;
-      
+      this.status_view = status_view;
+
       axios.get("http://127.0.0.1:8000/update_all_item/", {
         params: {
           str_company: String(this.edit_company),
+          view_status: Number(this.status_view),
         }
       })
       .then(function (response) {
@@ -145,6 +147,8 @@ export default {
             });
     },
     fetchData: function(status_num) {
+              this.now_view_status = status_num
+
               axios.get('http://127.0.0.1:8000/return_info/', {
                 params: {
                   status: Number(status_num)
