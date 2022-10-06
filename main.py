@@ -205,9 +205,6 @@ def update_item(str_company: str='', job_list: int=0, status: int=0):
 @app.get("/update_all_item/")
 def update_item(str_company: str='', view_status: int=0):
     print("---------- Update All Item ----------")
-    print(str_company)
-    print(view_status)
-
     
     global job_group
     if len(job_group) == 0:
@@ -233,7 +230,8 @@ def update_item(str_company: str='', view_status: int=0):
 def company_block(str_company: str=''):
     print("---------- Company Block ----------")
 
-    update_item(str_company)
+    # 우선 WAIT 페이지에서만 BLOCK을 한다고 가정
+    update_item(str_company, 2)
 
     filter_list_company_name_path = "config/filter_list_company_name.txt"
     with open(filter_list_company_name_path, 'a', encoding="EUC-KR") as f:

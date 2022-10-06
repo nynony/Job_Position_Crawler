@@ -132,7 +132,7 @@ export default {
     },
     block_company(edit_company) {
       this.edit_company = edit_company;
-      
+
       axios.get("http://127.0.0.1:8000/company_block/", {
         params: {
           str_company: String(this.edit_company),
