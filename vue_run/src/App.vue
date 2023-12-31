@@ -5,11 +5,11 @@
       <div class="menu">
         <!-- <a v-for="(menu_name, i) in menus" :key="i">{{ menu_name }}</a> -->
         <!-- <v-btn v-for="(menu_name, i) in menus" :key="i" class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(i+1)">{{ menu_name }}</v-btn> -->
-        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(1)">ALL</v-btn>
-        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(2)">WAIT</v-btn>
-        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(3)">SAVE</v-btn>
-        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(4)">HOLD</v-btn>
-        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(5)">CLOSE</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(1)">전체</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(2)">대기중</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(3)">저장</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(4)">임시저장</v-btn>
+        <v-btn class="btn_st" color="white--text" rounded elevation="2" @click="fetchData(5)">확인완료</v-btn>
         <p></p>
         <v-p class="num_status">{{num_status_all}}</v-p>
         <v-p class="num_status">{{num_status_wait}}</v-p>
@@ -33,7 +33,7 @@
               class="btn_st_company_title"
               rounded elevation="2"
               @click="update_all_func(job_info[0].company, now_view_status)">
-              All Close
+              전체 확인완료
             </v-btn>
             <v-btn
               depressed 
@@ -42,7 +42,7 @@
               class="btn_st_company_title"
               rounded elevation="2"
               @click="block_company(job_info[0].company)">
-              Block
+              차단
             </v-btn>
         </p>
        
@@ -54,9 +54,9 @@
 
         <!-- 리스트 내 버튼 클릭 -->
 
-        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 3)">Save</v-btn>
-        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 4)">Hold</v-btn>
-        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 5)">Close</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 3)">저장</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 4)">임시저장</v-btn>
+        <v-btn class="btn_st_title" rounded elevation="2" @click="update_func(job_info[j].company, job_info[j].title_idx, 5)">확인완료</v-btn>
 
 
         </p>
